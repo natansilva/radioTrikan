@@ -1,0 +1,27 @@
+*{
+	font-family: arial;
+}
+
+body{
+	font-size: 62.5%
+}
+
+#playlist{
+	margin-top: 30px;
+	font-size: 2em;
+	outline: none;
+}
+
+#player{
+	margin-top: 20px;
+}
+
+#query_search{
+	margin: 20px 0; 
+}
+
+.jstree-default .jstree-search {
+	font-style: italic;
+	color: red;
+	font-weight: 700;
+}
