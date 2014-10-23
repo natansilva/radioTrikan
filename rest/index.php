@@ -8,10 +8,12 @@ $app = new \Slim\Slim(array(
     )
 );
 
-$app->get('/musics', function() use ($app) {
+
+$app->get('/musics/', function() use ($app) {
+
     $response = $app->response();
     $response['Content-Type'] = 'application/json';
-
+    
     $album = new Album('./mus');
     
     $albuns = array();    
@@ -27,8 +29,7 @@ $app->get('/musics', function() use ($app) {
                     'parent'=>"parent_{$parent}", 
                     'text'=> basename($music['music']), 
                     'icon'=>'glyphicon glyphicon-music',
-                    'a_attr'=> array('href'=>$music['music']),
-                    'state'=>array('loaded'=>true)
+                    'a_attr'=> array('href'=>$music['music'])
                 );
                 $children++;
             }    

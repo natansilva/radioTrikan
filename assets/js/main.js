@@ -8,7 +8,7 @@ $(function(){
 	    	'data' : {
 	    		'url' : function (node) {
 			        return node.id === '#' ?
-			          'rest/index.php/musics' : 'rest/index.php/musics';
+			          'rest/index.php/musics' : false;
 			      },
 				'data' : function (node) {
 					return { 'id' : node.id };
@@ -32,42 +32,36 @@ $(function(){
 	});
 
 	$playlist.on('ready.jstree', function (e, data) {
-		console.log(data.instance._model);
+		//console.log(data.instance._model);
 		//data.instance.redraw(true);
 	})
 
 	setTimeout(function(){
-		player.init();
+		//player.init();
 	}, 5000);
 });
 
-var player = (function(){
-	var module = {
-		player: $("#player"),
-		$source: $("#source"),
-		musics: $('a[id^="parent"]'),
-		init: function(){
+// var player = (function(){
+// 	var module = {
+// 		player: null,
+// 		$source: null,
+// 		musics: null,
+// 		init: function(){
+// 			//module.play();	
+// 		},
+// 		play: function(){
+// 			module.selectMusic(module.musics[0]);
+// 		},
+// 		selectMusic: function(element){
+// 			//console.log('trocou: ' + element.attr("href"));
+// 			//module.$source.attr("src", element.attr("href"));
+//         	//module.player.load();
+// 		}
+// 	}
 
-			module.player = $("#player");
-			module.$source = $("#source");
-			module.musics = $('a[id^="child"]');
+// 	return {
+// 		init: module.init
 
-			
-			module.play();	
-		},
-		play: function(){
-			module.selectMusic(module.musics[0]);
-		},
-		selectMusic: function(element){
-			console.log('trocou: ' + element.attr("href"));
-			//module.$source.attr("src", element.attr("href"));
-        	module.player.load();
-		}
-	}
+// 	}
 
-	return {
-		init: module.init
-
-	}
-
-}());
+// }());
