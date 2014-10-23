@@ -32,36 +32,53 @@ $(function(){
 	});
 
 	$playlist.on('ready.jstree', function (e, data) {
-		//console.log(data.instance._model);
-		//data.instance.redraw(true);
-	})
+		var allData = data.instance._model.data;
+		var musics = [];
 
-	setTimeout(function(){
-		//player.init();
-	}, 5000);
+		if(allData){
+			$.each(allData, function(id, obj){
+				if(id.indexOf("child") == 0){
+					musics.push(obj);
+				}
+			})
+		}
+
+		if(musics.length){
+			player.setMusics(musics);
+			player.init();
+		}
+	})
 });
 
-// var player = (function(){
-// 	var module = {
-// 		player: null,
-// 		$source: null,
-// 		musics: null,
-// 		init: function(){
-// 			//module.play();	
-// 		},
-// 		play: function(){
-// 			module.selectMusic(module.musics[0]);
-// 		},
-// 		selectMusic: function(element){
-// 			//console.log('trocou: ' + element.attr("href"));
-// 			//module.$source.attr("src", element.attr("href"));
-//         	//module.player.load();
-// 		}
-// 	}
+var player = (function(){
+	var module = {
+		$player: null,
+		$source: null,
+		musics: null,
+		init: function(){
+			module.$source = $('#source');
+			module.$player = $('#player');
+			module.play();	
+		},
+		setMusics: function(musics){
+			module.musics = musics;
+		},
+		play: function(){
+			//console.log(module.musics[0]['a_attr'].href);
+			module.selectMusic(module.musics[0]);
+		},
+		selectMusic: function(element){
+			console.log(element['a_attr'].href);
+			module.$source.attr("src", 'rest/' + element['a_attr'].href);
+        	module.$player.load();
+        	console.log(module.$player);
+        	//module.$player.play();
+		}
+	}
 
-// 	return {
-// 		init: module.init
+	return {
+		init: module.init,
+		setMusics: module.setMusics
+	}
 
-// 	}
-
-// }());
+}());
