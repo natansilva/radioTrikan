@@ -20,9 +20,8 @@ $app->get('/musics/', function() use ($app) {
 
     $parent = 0;
     $children = 0;
-    $albunsK = $album->showFiles();
-    ksort($albunsK);
-    foreach($albunsK as $album => $musics){
+    
+    foreach($album->showFiles() as $album => $musics){
         $albuns[] = array('id'=>"parent_{$parent}", 'parent'=>'#', 'text'=>$album);
         if(is_array($musics) && count($musics)){
             foreach($musics as $music){

@@ -39,7 +39,7 @@ class Album
                 Album::$musics[Album::$sobcategory][] = array('music'=> $path);
             }
         }
-
+        ksort(Album::$musics);
         return Album::$musics;
     }
 }
