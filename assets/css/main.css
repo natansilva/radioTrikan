@@ -6,6 +6,10 @@ body{
 	font-size: 62.5%
 }
 
+#all{
+	margin-bottom: 100px;
+}
+
 #playlist{
 	margin-top: 30px;
 	font-size: 2em;
@@ -20,8 +24,24 @@ body{
 	margin: 20px 0; 
 }
 
+#musicTitle{
+	font-size: 2em;
+	margin-top: 10px;
+	font-weight: bold;
+}
+
 .jstree-default .jstree-search {
 	font-style: italic;
-	color: red;
-	font-weight: 700;
+	color: #028;
+	font-weight: bold;
+}
+
+#boxplayer{
+	width: 305px;
+	position: fixed;
+	right: 30px;
+}
+
+button{
+	margin-top: 10px;
 }

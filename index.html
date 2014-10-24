@@ -20,12 +20,18 @@
     </head>
 
     <body>
-        <div class="container-fluid">
-            <audio id="player" preload="auto" autoplay="true" tabindex="0" controls="" >
-                <source id="source" src="">
-            </audio>
-            
-            <input type="text" id="query_search" class="form-control" placeholder="Buscar">
+        <div id="all" class="container-fluid">
+
+            <div id="boxplayer">
+                <button id="btprev" class="btn default">anterior</button> <button id="btnext" class="btn default">próxima</button>
+                <audio id="player" preload="auto" autoplay="true" tabindex="0" controls="" >
+                    <source id="source" src="">
+                </audio>
+                
+                <div id="musicTitle"></div>
+                <input type="text" id="query_search" class="form-control" placeholder="Buscar">                
+            </div>
+
             <div id="playlist"></div>    
         </div>
     </body>
