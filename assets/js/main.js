@@ -19,6 +19,8 @@ $(function(){
 		"plugins" : [ "search" ]
 	});
 
+	var clip = new ZeroClipboard(document.getElementById('copy-description'));
+
 	var to = false;
 	$('#query_search').keyup(function () {
 		if(to) { clearTimeout(to); }
@@ -88,10 +90,9 @@ var player = (function(){
 				var n = location_param.split('=').pop();
 				indexInit = n > (module.musics.length - 1) || n < 0 ? 0 : n;
 			}
-
 			module.play(module.musics[indexInit]);
 			module.bindEnded();
-			module.bindButtons();	
+			module.bindButtons();
 		},
 		isMusic: function(id){
 			if(id.indexOf("child") != -1)
@@ -145,7 +146,6 @@ var player = (function(){
 			}
 		},
 		prev: function(){
-			console.log('testes');
 			var keys = Object.keys(module.musics);
 		    var i = keys.indexOf(module.currentIndex);
 			return i !== -1 && keys[i--] && module.musics[keys[i--]];
@@ -155,6 +155,8 @@ var player = (function(){
 			module.current = element;
 			var jstree = module.$jstree;
 			jstree.select_node(module.prefixChildren + module.currentIndex);
+			module.copyToClipboard();
+
 		},
 		getElementById: function(id){
 			for(i in module.musics){
@@ -185,6 +187,11 @@ var player = (function(){
 		},
 		getIdByElement: function(element){
 			return element.id.split('_').pop();
+		},
+		copyToClipboard : function()
+		{
+			var url = window.location.href + '?music=' + module.currentIndex;
+			$('#copy-description').attr('data-clipboard-text',url);
 		}
 	}
 
