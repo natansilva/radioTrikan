@@ -10,34 +10,15 @@ $app = new \Slim\Slim(array(
 
 
 $app->get('/musics/', function() use ($app) {
-
     $response = $app->response();
-    $response['Content-Type'] = 'application/json';
+    //$response['Content-Type'] = 'application/json';
     
     $album = new Album('./mus');
-    
     $albuns = array();    
 
-    $parent = 0;
-    $children = 0;
+    $album->showFiles();
     
-    foreach($album->showFiles() as $album => $musics){
-        $albuns[] = array('id'=>"parent_{$parent}", 'parent'=>'#', 'text'=>$album);
-        if(is_array($musics) && count($musics)){
-            foreach($musics as $music){
-                $albuns[] = array(
-                    'id'=>"children_{$children}", 
-                    'parent'=>"parent_{$parent}", 
-                    'text'=> basename($music['music']), 
-                    'icon'=>'glyphicon glyphicon-music',
-                    'a_attr'=> array('href'=>$music['music'])
-                );
-                $children++;
-            }    
-        }
-        $parent++;
-    }
-    $response->body(json_encode($albuns));
+    $response->body();
 });
 
 $app->run();

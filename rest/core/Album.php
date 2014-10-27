@@ -2,9 +2,12 @@
 class Album
 {
     public static $musics = array();
-    public static $categories = array();
-    public static $sobcategory;
+    public static $category;
     public static $key = 0;
+    public static $parent_id = 0;
+    public static $childre_id = 0;
+    public static $parent_last;
+
     public $path;
 
     public function __construct($path){
@@ -12,35 +15,50 @@ class Album
     }
 
     function showFiles(){
-        
         $path = $this->path;
 
-        if (!$path) { return false; }    
-
-        if (is_dir($path)) {
-            $dir = opendir($path);
-
-            while ($file = readdir($dir)) {
-                if ($file != '.' && $file != '..' && $file != '.htaccess') {
-                    
-                    Album::$sobcategory = basename($path);
-                    Album::$categories[basename($path)] = array('text' => basename($path), 'parent' => $path);
-
-                    $this->path = "{$path}/{$file}";
-                    $this->showFiles();
-                    
-                    unset($file);
-                }
+        $directory = new \RecursiveDirectoryIterator($path, \FilesystemIterator::FOLLOW_SYMLINKS);
+        $filter = new \RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
+            // Skip hidden files and directories.
+            if ($current->getFilename()[0] === '..') {
+                return FALSE;
             }
-            closedir($dir);
-            unset($dir);   
-        }else{
-            if( preg_match('/.+(mp3|wav)$/', $path) && is_file($path)){
-                Album::$musics[Album::$sobcategory][] = array('music'=> $path);
-            }
+            return $iterator;
+        });
+
+        $iterator = new \RecursiveIteratorIterator($filter);
+        $files = array();
+        
+        foreach ($iterator as $info) {
+
+            $files[] = array(
+                'name' => $info->isDir() ? $info->getPath() : $info->getPathname(),
+                'type' => $info->isDir() ? 'dir' : 'file'
+            );    
         }
-        ksort(Album::$musics);
-        return Album::$musics;
+
+        foreach ($files as $file) {
+            echo "{$file['type']}: {$file['name']} <br />";
+        }
+        
+        die();
+        //ksort(Album::$musics);
+        
+        //return Album::$musics;
     }
+
+    protected function simpleChar($string) {
+        return strtolower(preg_replace( '/[`^~\'"\s]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string)));
+    }
+
+    function exists($key1, $key2)
+    {
+        if ($key1 == $key2){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
 }
 ?>
