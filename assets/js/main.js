@@ -190,7 +190,8 @@ var player = (function(){
 		},
 		copyToClipboard : function()
 		{
-			var url = window.location.href + '?music=' + module.currentIndex;
+			var l = window.location;
+			var url = l.origin + l.pathname + '?music=' + module.currentIndex;
 			$('#copy-description').attr('data-clipboard-text',url);
 		}
 	}
