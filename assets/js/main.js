@@ -93,6 +93,21 @@ var player = (function(){
 			module.play(module.musics[indexInit]);
 			module.bindEnded();
 			module.bindButtons();
+			module.arrows();
+		},
+		arrows: function(){
+			$(document).keydown(function(e) {
+			    switch(e.which) {
+			        case 37:
+			        	module.bindPrev();
+			        break;
+			        case 39: 
+			        	module.nextAutomatic();
+			        break;
+			        default: return;
+			    }
+			    e.preventDefault();
+			});
 		},
 		isMusic: function(id){
 			if(id.indexOf("child") != -1)
@@ -105,13 +120,16 @@ var player = (function(){
 				module.nextAutomatic();	
 			});
 			module.$btprev.on('click', function(){
-				module.deselect_nodes();
-				if(module.existPrev()){
-					module.play(module.prev());	
-				}else{
-					module.play(module.musics[module.musics.length - 1]);
-				}
+				module.bindPrev();		
 			}); 
+		},
+		bindPrev: function(){
+			module.deselect_nodes();
+			if(module.existPrev()){
+				module.play(module.prev());	
+			}else{
+				module.play(module.musics[module.musics.length - 1]);
+			}
 		},
 		deselect_nodes: function(){
 			var tree = module.$jstree;
