@@ -45,3 +45,7 @@ body{
 button{
 	margin-top: 10px;
 }
+
+#btDownload{
+	font-size: 2em;
+}

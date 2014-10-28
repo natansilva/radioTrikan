@@ -40,4 +40,17 @@ $app->get('/musics/', function() use ($app) {
     $response->body(json_encode($albuns));
 });
 
+$app->get('/download/:music', function($musica) {
+    $arquivo = $musica;
+    switch(strtolower(substr(strrchr(basename($arquivo),"."),1))){
+        case "mp3": $tipo="audio/mpeg"; break;
+    }
+
+     header("Content-Type: ".$tipo);
+     header("Content-Length: ".filesize($arquivo));
+     header("Content-Disposition: attachment; filename=".basename($arquivo));
+     readfile($arquivo);
+     exit;
+})->conditions(array('music' => '.+'));;
+
 $app->run();
