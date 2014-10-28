@@ -1,6 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
 require_once 'core/Album.php';
+require_once 'core/cache.class.php';
 
 $app = new \Slim\Slim(array(
         'mode' => 'development',
@@ -10,34 +11,47 @@ $app = new \Slim\Slim(array(
 
 
 $app->get('/musics/', function() use ($app) {
-
+  
     $response = $app->response();
     $response['Content-Type'] = 'application/json';
     
-    $album = new Album('./mus');
-    
-    $albuns = array();    
+    $c = new Cache();
 
-    $parent = 0;
-    $children = 0;
+    $nameCache = 'newcache';
+    if($c->isCached($nameCache)){
+        $result = $c->retrieve($nameCache);
+        $response->body(json_encode($result));
+    }else{
+
+        $album = new Album('./mus');
     
-    foreach($album->showFiles() as $album => $musics){
-        $albuns[] = array('id'=>"parent_{$parent}", 'parent'=>'#', 'text'=>$album);
-        if(is_array($musics) && count($musics)){
-            foreach($musics as $music){
-                $albuns[] = array(
-                    'id'=>"children_{$children}", 
-                    'parent'=>"parent_{$parent}", 
-                    'text'=> basename($music['music']), 
-                    'icon'=>'glyphicon glyphicon-music',
-                    'a_attr'=> array('href'=>$music['music'])
-                );
-                $children++;
-            }    
+        $albuns = array();    
+
+        $parent = 0;
+        $children = 0;
+
+        foreach($album->showFiles() as $album => $musics){
+            $albuns[] = array('id'=>"parent_{$parent}", 'parent'=>'#', 'text'=>$album);
+            if(is_array($musics) && count($musics)){
+                foreach($musics as $music){
+                    $albuns[] = array(
+                        'id'=>"children_{$children}", 
+                        'parent'=>"parent_{$parent}", 
+                        'text'=> basename($music['music']), 
+                        'icon'=>'glyphicon glyphicon-music',
+                        'a_attr'=> array('href'=>$music['music'])
+                    );
+                    $children++;
+                }    
+            }
+            $parent++;
         }
-        $parent++;
+
+        $c->store($nameCache, $albuns);
+        
+        $response->body(json_encode($albuns));
     }
-    $response->body(json_encode($albuns));
+    
 });
 
 $app->get('/download/:music', function($musica) {

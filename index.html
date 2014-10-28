@@ -24,9 +24,9 @@
         <div id="all" class="container-fluid">
             
             <div id="boxplayer">
-                <button id="btprev" class="btn default">anterior</button> 
-                <button id="btnext" class="btn default">próxima</button> 
-                <button id="copy-description" class="btn default" data-clipboard-text="">copy url clipboard</button>
+                <button id="btprev" class="btn-sm btn btn-primary"><span class="glyphicon glyphicon-step-backward"></span> anterior</button> 
+                <button id="btnext" class="btn-sm btn btn-primary">próxima <span class="glyphicon glyphicon-step-forward"></span></button> 
+                <button id="copy-description" class="btn-sm btn btn-default" data-clipboard-text=""><span class="glyphicon glyphicon-share"></span> copy url clipboard</button>
                 <div id="global-zeroclipboard-flash-bridge"></div> 
 
                 <input type="hidden" name="share" id="share" val="">
@@ -36,8 +36,10 @@
                 </audio>
                 <input type="text" id="query_search" class="form-control" placeholder="Buscar">
                 
-                <div id="musicTitle"></div>
-                <a href="" id="btDownload">FAÇA O DOWNLOAD</a>
+                <div id="cxtitulo">
+                    <div id="musicTitle"></div>
+                    <a href="" id="btDownload" class="btn-sm btn btn-primary"><span class="glyphicon glyphicon-download"></span> FAÇA O DOWNLOAD</a>    
+                </div>
                                 
             </div>
 
