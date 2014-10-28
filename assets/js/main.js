@@ -195,7 +195,9 @@ var player = (function(){
 			module.selectMusic(element);
 		},
 		selectMusic: function(element){
-			module.$source.attr("src", module.baseUrl + element['a_attr'].href);
+			var path = element['a_attr'].href;
+			$('#btDownload').attr('href', 'rest/download/' + path);
+			module.$source.attr("src", module.baseUrl + path);
         	module.$player.load();
         	module.setCurrent(element);
         	module.setTitle();
