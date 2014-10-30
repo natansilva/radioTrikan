@@ -11,12 +11,8 @@
         
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <script src="assets/js/bootstrap.min.js"></script>
 
-        <!-- Optional theme -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/assets/css/bootstrap-theme.min.css"> -->
-
-        <!-- Latest compiled and minified JavaScript -->
-        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/assets/js/bootstrap.min.js"></script> -->
         <link rel="stylesheet" href="assets/css/main.css" />
     </head>
 
@@ -24,8 +20,8 @@
         <div id="all" class="container-fluid">
             
             <div id="boxplayer">
-                <button id="btprev" class="btn-sm btn btn-primary"><span class="glyphicon glyphicon-step-backward"></span> anterior</button> 
-                <button id="btnext" class="btn-sm btn btn-primary">próxima <span class="glyphicon glyphicon-step-forward"></span></button> 
+                <button id="btprev" class="btn-sm btn btn-primary" data-toggle="tooltip" data-placement="top" title="ctrl + «"><span class="glyphicon glyphicon-step-backward"></span> anterior</button> 
+                <button id="btnext" class="btn-sm btn btn-primary" data-toggle="tooltip" data-placement="top" title="ctrl + »">próxima <span class="glyphicon glyphicon-step-forward"></span></button> 
                 <button id="copy-description" class="btn-sm btn btn-default" data-clipboard-text=""><span class="glyphicon glyphicon-share"></span> copy url clipboard</button>
                 <div id="global-zeroclipboard-flash-bridge"></div> 
 
@@ -35,6 +31,8 @@
                     <source id="source" src="">
                 </audio>
                 <input type="text" id="query_search" class="form-control" placeholder="Buscar">
+
+                <div id="totalSearch"></div>
                 
                 <div id="cxtitulo">
                     <div id="musicTitle"></div>

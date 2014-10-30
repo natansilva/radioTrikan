@@ -16,7 +16,10 @@ $(function(){
 			},
 			'multiple' : false
 		},
-		"plugins" : [ "search" ]
+		"plugins" : [ "search" ],
+		"search": {
+			'show_only_matches' : true
+		}
 	});
 
 	var clip = new ZeroClipboard(document.getElementById('copy-description'));
@@ -26,7 +29,10 @@ $(function(){
 		if(to) { clearTimeout(to); }
 		to = setTimeout(function () {
 			var v = $search.val();
-			$playlist.jstree(true).search(v);
+			if(v.length > 2 || v.length == 0){
+				$playlist.jstree(true).search(v);
+				player.countSearch();
+			}
 		}, 250);
 	});
 
@@ -76,6 +82,7 @@ var player = (function(){
 		current: null,
 		$jstree: null,
 		lastItem: null,
+		totalSeach: 0,
 		init: function(){
 			module.$source = $('#source');
 			module.$musicTitle = $('#musicTitle');
@@ -96,17 +103,37 @@ var player = (function(){
 			module.arrows();
 		},
 		arrows: function(){
+			
+			var pressedCtrl = false;
+
+			$(document).keyup(function(e) {
+				if(e.which == 17){
+					pressedCtrl = false;
+				}
+			});
+
 			$(document).keydown(function(e) {
-			    switch(e.which) {
-			        case 37:
-			        	module.bindPrev();
-			        break;
-			        case 39: 
-			        	module.nextAutomatic();
-			        break;
-			        default: return;
-			    }
-			    e.preventDefault();
+				console.log(e.which);
+				if(e.which == 17){
+					pressedCtrl = true;
+				}
+
+				if(pressedCtrl){
+					switch(e.which) {
+				        case 37:
+				        	module.bindPrev();
+				        break;
+				        case 39: 
+				        	module.nextAutomatic();
+				        break;
+				        case 67:
+				        	console.log('entrou');
+				        	
+				        break;
+				        default: return;
+				    }
+				    e.preventDefault();
+				}
 			});
 		},
 		isMusic: function(id){
@@ -213,6 +240,18 @@ var player = (function(){
 			var l = window.location;
 			var url = l.origin + l.pathname + '?music=' + module.currentIndex;
 			$('#copy-description').attr('data-clipboard-text',url);
+		},
+		countSearch: function(){
+			var totalAtual = $('a.jstree-search').length;
+			var $totalSearch = $('#totalSearch');
+
+			if(totalAtual > 0 && totalAtual != module.totalSeach){
+				var plural = totalAtual > 1 ? ' músicas encontradas' : ' música encontrada';
+				$totalSearch.html(totalAtual + plural).css('visibility', 'visible');
+			}else{
+				$totalSearch.css('visibility', 'hidden');
+			}
+			
 		}
 	}
 
@@ -221,7 +260,8 @@ var player = (function(){
 		setMusics: module.setMusics,
 		isMusic: module.isMusic,
 		play: module.play,
-		getElementById: module.getElementById
+		getElementById: module.getElementById,
+		countSearch: module.countSearch
 	}
 
 }());

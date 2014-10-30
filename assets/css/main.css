@@ -21,7 +21,7 @@ body{
 }
 
 #query_search{
-	margin: 20px 0; 
+	margin: 20px 0 0 0;
 }
 
 #musicTitle{
@@ -40,6 +40,7 @@ body{
 	width: 305px;
 	position: fixed;
 	right: 30px;
+	top:20px;
 }
 
 button{
@@ -55,4 +56,11 @@ button{
 	padding: 20px 10px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
+}
+
+#totalSearch{
+	font-size: 2em;
+	visibility: hidden;
+	height: 30px;
+	padding-top: 3px;
 }
