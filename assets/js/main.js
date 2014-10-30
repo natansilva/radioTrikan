@@ -18,7 +18,8 @@ $(function(){
 		},
 		"plugins" : [ "search" ],
 		"search": {
-			'show_only_matches' : true
+			'show_only_matches' : true,
+			'search_leaves_only' : true
 		}
 	});
 
