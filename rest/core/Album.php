@@ -16,39 +16,69 @@ class Album
 
     function showFiles(){
         $path = $this->path;
+        $startpath = $path;
 
-        $directory = new \RecursiveDirectoryIterator($path, \FilesystemIterator::FOLLOW_SYMLINKS);
-        $filter = new \RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
-            // Skip hidden files and directories.
-            if ($current->getFilename()[0] === '..') {
-                return FALSE;
+        $ritit = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($startpath), RecursiveIteratorIterator::SELF_FIRST); 
+        $r = array(); 
+        $childrenCount = 0;
+        $parentCount = 0;
+
+        foreach ($ritit as $splFileInfo) {
+            
+            if($splFileInfo->getFilename() == '.' || $splFileInfo->getFilename() == '..') 
+                continue;
+
+            $parent = '#';
+
+            for ($depth = $ritit->getDepth() - 1; $depth >= 0; $depth--) {
+               $parent = $this->simpleChar($ritit->getSubIterator($depth)->current()->getFilename());
             }
-            return $iterator;
-        });
 
-        $iterator = new \RecursiveIteratorIterator($filter);
-        $files = array();
-        
-        foreach ($iterator as $info) {
+            if($splFileInfo->isDir()){
 
-            $files[] = array(
-                'name' => $info->isDir() ? $info->getPath() : $info->getPathname(),
-                'type' => $info->isDir() ? 'dir' : 'file'
-            );    
+                $id = $this->simpleChar($splFileInfo->getFilename());
+                if($parent == $id){
+                    $parent = '#';
+                }
+
+                if($ritit->getDepth() > 1){
+                    $depth = $ritit->getDepth() - 1;
+                    $parent = $ritit->getSubIterator($depth)->current()->getFilename();
+                    $parent = $this->simpleChar($parent);
+                }
+
+                $r[] = array(
+                        'id'=> $id,
+                        'type' => 'directory',
+                        'text' => $splFileInfo->getFilename(),
+                        'parent' => $parent,
+                        'path'=> $splFileInfo->getPathname(),
+                        'teste'=> $ritit->getDepth() > 1 ? "é maior: tamanho real é {$ritit->getDepth()}" : false
+                    );
+                $parentMusic = $id;
+
+            }else{
+
+                if($splFileInfo->getExtension() != 'mp3')
+                    continue;
+
+                $r[] = array(
+                    'id'=> "children_{$childrenCount}",
+                    'type' => 'file',
+                    'text' => $splFileInfo->getFilename(),
+                    'parent' => $parentMusic,
+                    'icon'=>'glyphicon glyphicon-music',
+                    'a_attr'=> array('href'=> $splFileInfo->getPathname()),
+                    'path'=> $parent
+                );
+                $childrenCount++;
+            }
         }
-
-        foreach ($files as $file) {
-            echo "{$file['type']}: {$file['name']} <br />";
-        }
-        
-        die();
-        //ksort(Album::$musics);
-        
-        //return Album::$musics;
+        return $r;
     }
 
     protected function simpleChar($string) {
-        return strtolower(preg_replace( '/[`^~\'"\s]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string)));
+        return strtolower(preg_replace( '/[)(\/`^.~\'"\]\[\s#-]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string)));
     }
 
     function exists($key1, $key2)

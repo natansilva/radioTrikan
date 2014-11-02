@@ -8,17 +8,16 @@ $app = new \Slim\Slim(array(
     )
 );
 
-
 $app->get('/musics/', function() use ($app) {
     $response = $app->response();
-    //$response['Content-Type'] = 'application/json';
+    $response['Content-Type'] = 'application/json';
     
     $album = new Album('./mus');
     $albuns = array();    
 
-    $album->showFiles();
-    
-    $response->body();
+    $recursive = $album->showFiles();
+
+    $response->body(json_encode($recursive));
 });
 
 $app->run();
