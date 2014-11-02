@@ -2,9 +2,12 @@
 class Album
 {
     public static $musics = array();
-    public static $categories = array();
-    public static $sobcategory;
+    public static $category;
     public static $key = 0;
+    public static $parent_id = 0;
+    public static $childre_id = 0;
+    public static $parent_last;
+
     public $path;
 
     public function __construct($path){
@@ -12,35 +15,80 @@ class Album
     }
 
     function showFiles(){
-        
         $path = $this->path;
+        $startpath = $path;
 
-        if (!$path) { return false; }    
+        $ritit = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($startpath), RecursiveIteratorIterator::SELF_FIRST); 
+        $r = array(); 
+        $childrenCount = 0;
+        $parentCount = 0;
 
-        if (is_dir($path)) {
-            $dir = opendir($path);
+        foreach ($ritit as $splFileInfo) {
+            
+            if($splFileInfo->getFilename() == '.' || $splFileInfo->getFilename() == '..') 
+                continue;
 
-            while ($file = readdir($dir)) {
-                if ($file != '.' && $file != '..' && $file != '.htaccess') {
-                    
-                    Album::$sobcategory = basename($path);
-                    Album::$categories[basename($path)] = array('text' => basename($path), 'parent' => $path);
+            $parent = '#';
 
-                    $this->path = "{$path}/{$file}";
-                    $this->showFiles();
-                    
-                    unset($file);
-                }
+            for ($depth = $ritit->getDepth() - 1; $depth >= 0; $depth--) {
+               $parent = $this->simpleChar($ritit->getSubIterator($depth)->current()->getFilename());
             }
-            closedir($dir);
-            unset($dir);   
-        }else{
-            if( preg_match('/.+(mp3|wav)$/', $path) && is_file($path)){
-                Album::$musics[Album::$sobcategory][] = array('music'=> $path);
+
+            if($splFileInfo->isDir()){
+
+                $id = $this->simpleChar($splFileInfo->getFilename());
+                if($parent == $id){
+                    $parent = '#';
+                }
+
+                if($ritit->getDepth() > 1){
+                    $depth = $ritit->getDepth() - 1;
+                    $parent = $ritit->getSubIterator($depth)->current()->getFilename();
+                    $parent = $this->simpleChar($parent);
+                }
+
+                $r[] = array(
+                        'id'=> $id,
+                        'type' => 'directory',
+                        'text' => $splFileInfo->getFilename(),
+                        'parent' => $parent,
+                        'path'=> $splFileInfo->getPathname(),
+                        'teste'=> $ritit->getDepth() > 1 ? "é maior: tamanho real é {$ritit->getDepth()}" : false
+                    );
+                $parentMusic = $id;
+
+            }else{
+
+                if($splFileInfo->getExtension() != 'mp3')
+                    continue;
+
+                $r[] = array(
+                    'id'=> "children_{$childrenCount}",
+                    'type' => 'file',
+                    'text' => $splFileInfo->getFilename(),
+                    'parent' => $parentMusic,
+                    'icon'=>'glyphicon glyphicon-music',
+                    'a_attr'=> array('href'=> $splFileInfo->getPathname()),
+                    'path'=> $parent
+                );
+                $childrenCount++;
             }
         }
-        ksort(Album::$musics);
-        return Album::$musics;
+        return $r;
     }
+
+    protected function simpleChar($string) {
+        return strtolower(preg_replace( '/[)(\/`^.~\'"\]\[\s#-]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string)));
+    }
+
+    function exists($key1, $key2)
+    {
+        if ($key1 == $key2){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
 }
 ?>

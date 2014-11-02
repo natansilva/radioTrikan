@@ -9,49 +9,24 @@ $app = new \Slim\Slim(array(
     )
 );
 
-
 $app->get('/musics/', function() use ($app) {
-  
+
     $response = $app->response();
     $response['Content-Type'] = 'application/json';
-    
-    $c = new Cache();
 
+    $c = new Cache();
     $nameCache = 'newcache';
+
     if($c->isCached($nameCache)){
         $result = $c->retrieve($nameCache);
-        $response->body(json_encode($result));
+        $response->body($result);
     }else{
-
-        $album = new Album('./mus');
-    
-        $albuns = array();    
-
-        $parent = 0;
-        $children = 0;
-
-        foreach($album->showFiles() as $album => $musics){
-            $albuns[] = array('id'=>"parent_{$parent}", 'parent'=>'#', 'text'=>$album);
-            if(is_array($musics) && count($musics)){
-                foreach($musics as $music){
-                    $albuns[] = array(
-                        'id'=>"children_{$children}", 
-                        'parent'=>"parent_{$parent}", 
-                        'text'=> basename($music['music']), 
-                        'icon'=>'glyphicon glyphicon-music',
-                        'a_attr'=> array('href'=>$music['music'])
-                    );
-                    $children++;
-                }    
-            }
-            $parent++;
-        }
-
-        $c->store($nameCache, $albuns);
-        
-        $response->body(json_encode($albuns));
+    	$album = new Album('./mus');
+    	$recursive = json_encode($album->showFiles());
+		
+    	$c->store($nameCache, $recursive);
+        $response->body($recursive);	
     }
-    
 });
 
 $app->get('/download/:music', function($musica) {
