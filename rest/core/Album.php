@@ -21,6 +21,8 @@ class Album
         $childrenCount = 0;
         $parentCount = 0;
 
+        $parentMusic = null;
+
         foreach ($ritit as $splFileInfo) {
             
             $parent = '#';
