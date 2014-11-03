@@ -15,19 +15,14 @@ class Album
     }
 
     function showFiles(){
-        $path = $this->path;
-        $startpath = $path;
-
-        $ritit = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($startpath), RecursiveIteratorIterator::SELF_FIRST); 
+        $rdi = new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS);
+        $ritit = new RecursiveIteratorIterator($rdi, RecursiveIteratorIterator::SELF_FIRST); 
         $r = array(); 
         $childrenCount = 0;
         $parentCount = 0;
 
         foreach ($ritit as $splFileInfo) {
             
-            if($splFileInfo->getFilename() == '.' || $splFileInfo->getFilename() == '..') 
-                continue;
-
             $parent = '#';
 
             for ($depth = $ritit->getDepth() - 1; $depth >= 0; $depth--) {
@@ -80,15 +75,5 @@ class Album
     protected function simpleChar($string) {
         return strtolower(preg_replace( '/[)(\/`^.~\'"\]\[\s#-]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string)));
     }
-
-    function exists($key1, $key2)
-    {
-        if ($key1 == $key2){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
 }
 ?>
