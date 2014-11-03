@@ -46,9 +46,7 @@ class Album
                         'id'=> $id,
                         'type' => 'directory',
                         'text' => $splFileInfo->getFilename(),
-                        'parent' => $parent,
-                        'path'=> $splFileInfo->getPathname(),
-                        'teste'=> $ritit->getDepth() > 1 ? "é maior: tamanho real é {$ritit->getDepth()}" : false
+                        'parent' => $parent
                     );
                 $parentMusic = $id;
 
@@ -63,8 +61,7 @@ class Album
                     'text' => $splFileInfo->getFilename(),
                     'parent' => $parentMusic,
                     'icon'=>'glyphicon glyphicon-music',
-                    'a_attr'=> array('href'=> $splFileInfo->getPathname()),
-                    'path'=> $parent
+                    'a_attr'=> array('href'=> $splFileInfo->getPathname())
                 );
                 $childrenCount++;
             }
@@ -73,7 +70,7 @@ class Album
     }
 
     protected function simpleChar($string) {
-        return strtolower(preg_replace( '/[)(\/`^.~\'"\]\[\s#-]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string)));
+        return md5(strtolower(preg_replace( '/[)(\/`^.~\'"\]\[\s#-]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $string))));
     }
 }
 ?>
