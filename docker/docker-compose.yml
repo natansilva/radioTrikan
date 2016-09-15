@@ -1,0 +1,8 @@
+radio:
+  container_name: radioTrikan
+  image: natansilva/radiotrikan
+  ports:
+    - "80:80"
+  volumes:
+    - "/var/www/radioTrikan:/var/www/html/"
+    - "~/Music/Musicas/:/var/www/html/rest/mus/"
